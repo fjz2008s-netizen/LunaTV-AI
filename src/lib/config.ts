@@ -32,7 +32,7 @@ interface ConfigFileStruct {
   }[];
   lives?: {
     [key: string]: LiveCfg;
-  };
+  }
 }
 
 export const API_CONFIG = {
@@ -58,6 +58,7 @@ export const API_CONFIG = {
 // 在模块加载时根据环境决定配置来源
 let cachedConfig: AdminConfig;
 
+
 // 从配置文件补充管理员配置
 export function refineConfig(adminConfig: AdminConfig): AdminConfig {
   let fileConfig: ConfigFileStruct;
@@ -74,7 +75,7 @@ export function refineConfig(adminConfig: AdminConfig): AdminConfig {
   const currentApiSites = new Map(
     (adminConfig.SourceConfig || [])
       .filter((s) => s.from === 'custom')
-      .map((s) => [s.key, s]),
+      .map((s) => [s.key, s])
   );
 
   // 添加新订阅中的所有源
@@ -93,7 +94,7 @@ export function refineConfig(adminConfig: AdminConfig): AdminConfig {
         name: site.name,
         api: site.api,
         detail: site.detail,
-        from: 'config' as const,
+        from: 'config',
         disabled: false,
       });
     }
@@ -109,7 +110,7 @@ export function refineConfig(adminConfig: AdminConfig): AdminConfig {
   const currentCustomCategories = new Map(
     (adminConfig.CustomCategories || [])
       .filter((c) => c.from === 'custom')
-      .map((c) => [c.query + c.type, c]),
+      .map((c) => [c.query + c.type, c])
   );
 
   // 添加新订阅中的所有自定义分类
@@ -143,7 +144,7 @@ export function refineConfig(adminConfig: AdminConfig): AdminConfig {
   const currentLives = new Map(
     (adminConfig.LiveConfig || [])
       .filter((l) => l.from === 'custom')
-      .map((l) => [l.key, l]),
+      .map((l) => [l.key, l])
   );
 
   // 添加新订阅中的所有直播源
@@ -177,23 +178,172 @@ export function refineConfig(adminConfig: AdminConfig): AdminConfig {
   return adminConfig;
 }
 
-async function getInitConfig(
-  configFile: string,
-  subConfig: {
-    URL: string;
-    AutoUpdate: boolean;
-    LastCheck: string;
-  } = {
-    URL: '',
+async function getInitConfig(configFile: string, subConfig: {
+  URL: string;
+  AutoUpdate: boolean;
+  LastCheck: string;
+} = {
+    URL: "",
     AutoUpdate: false,
-    LastCheck: '',
-  },
-): Promise<AdminConfig> {
+    LastCheck: "",
+  }): Promise<AdminConfig> {
   let cfgFile: ConfigFileStruct;
   try {
     cfgFile = JSON.parse(configFile) as ConfigFileStruct;
   } catch (e) {
     cfgFile = {} as ConfigFileStruct;
+  }
+
+  // 硬编码的默认视频源配置
+  if (!cfgFile.api_site || Object.keys(cfgFile.api_site).length === 0) {
+    cfgFile.api_site = {
+      "iqiyizyapi.com": {
+        "name": "🎬-爱奇艺-",
+        "api": "https://iqiyizyapi.com/api.php/provide/vod",
+        "detail": "https://iqiyizyapi.com"
+      },
+      "dbzy.tv": {
+        "name": "🎬豆瓣资源",
+        "api": "https://caiji.dbzy5.com/api.php/provide/vod",
+        "detail": "https://dbzy.tv"
+      },
+      "tyyszy.com": {
+        "name": "🎬天涯影视",
+        "api": "https://tyyszy.com/api.php/provide/vod",
+        "detail": "https://tyyszy.com"
+      },
+      "mtzy.me": {
+        "name": "🎬茅台资源",
+        "api": "https://caiji.maotaizy.cc/api.php/provide/vod",
+        "detail": "https://mtzy.me"
+      },
+      "wolongzyw.com": {
+        "name": "🎬卧龙资源",
+        "api": "https://wolongzyw.com/api.php/provide/vod",
+        "detail": "https://wolongzyw.com"
+      },
+      "ikunzy.com": {
+        "name": "🎬iKun资源",
+        "api": "https://ikunzyapi.com/api.php/provide/vod",
+        "detail": "https://ikunzy.com"
+      },
+      "dyttzyapi.com": {
+        "name": "🎬电影天堂",
+        "api": "http://caiji.dyttzyapi.com/api.php/provide/vod",
+        "detail": "http://caiji.dyttzyapi.com"
+      },
+      "www.maoyanzy.com": {
+        "name": "🎬猫眼资源",
+        "api": "https://api.maoyanapi.top/api.php/provide/vod",
+        "detail": "https://www.maoyanzy.com"
+      },
+      "cj.lzcaiji.com": {
+        "name": "🎬量子资源",
+        "api": "https://cj.lzcaiji.com/api.php/provide/vod",
+        "detail": "https://cj.lzcaiji.com"
+      },
+      "360zy.com": {
+        "name": "🎬360 资源",
+        "api": "https://360zyzz.com/api.php/provide/vod",
+        "detail": "https://360zy.com"
+      },
+      "jszyapi.com": {
+        "name": "🎬极速资源",
+        "api": "https://jszyapi.com/api.php/provide/vod",
+        "detail": "https://jszyapi.com"
+      },
+      "www.moduzy.net": {
+        "name": "🎬魔都资源",
+        "api": "https://www.mdzyapi.com/api.php/provide/vod",
+        "detail": "https://www.moduzy.net"
+      },
+      "ffzyapi.com": {
+        "name": "🎬非凡资源",
+        "api": "https://api.ffzyapi.com/api.php/provide/vod",
+        "detail": "https://cj.ffzyapi.com"
+      },
+      "bfzy.tv": {
+        "name": "🎬暴风资源",
+        "api": "https://bfzyapi.com/api.php/provide/vod",
+        "detail": "https://bfzy.tv"
+      },
+      "zuida.xyz": {
+        "name": "🎬最大资源",
+        "api": "https://api.zuidapi.com/api.php/provide/vod",
+        "detail": "https://zuida.xyz"
+      },
+      "wujinzy.me": {
+        "name": "🎬无尽资源",
+        "api": "https://api.wujinapi.me/api.php/provide/vod",
+        "detail": "https://wujinzy.com"
+      },
+      "xinlangapi.com": {
+        "name": "🎬新浪资源",
+        "api": "https://api.xinlangapi.com/xinlangapi.php/provide/vod",
+        "detail": "https://xinlangapi.com"
+      },
+      "api.wwzy.tv": {
+        "name": "🎬旺旺资源",
+        "api": "https://api.wwzy.tv/api.php/provide/vod",
+        "detail": "https://api.wwzy.tv"
+      },
+      "www.subozy.com": {
+        "name": "🎬速播资源",
+        "api": "https://subocaiji.com/api.php/provide/vod",
+        "detail": "https://www.subozy.com"
+      },
+      "jinyingzy.com": {
+        "name": "🎬金鹰点播",
+        "api": "https://jinyingzy.com/api.php/provide/vod",
+        "detail": "https://jinyingzy.com"
+      },
+      "p2100.net": {
+        "name": "🎬飘零资源",
+        "api": "https://p2100.net/api.php/provide/vod",
+        "detail": "https://p2100.net"
+      },
+      "api.ukuapi88.com": {
+        "name": "🎬U酷影视",
+        "api": "https://api.ukuapi88.com/api.php/provide/vod",
+        "detail": "https://www.ukuzy.com"
+      },
+      "api.guangsuapi.com": {
+        "name": "🎬光速资源",
+        "api": "https://api.guangsuapi.com/api.php/provide/vod",
+        "detail": "https://api.guangsuapi.com"
+      },
+      "www.hongniuzy.com": {
+        "name": "🎬红牛资源",
+        "api": "https://www.hongniuzy2.com/api.php/provide/vod",
+        "detail": "https://www.hongniuzy.com"
+      },
+      "caiji.moduapi.cc": {
+        "name": "🎬魔都动漫",
+        "api": "https://caiji.moduapi.cc/api.php/provide/vod",
+        "detail": "https://caiji.moduapi.cc"
+      },
+      "www.ryzyw.com": {
+        "name": "🎬如意资源",
+        "api": "https://cj.rycjapi.com/api.php/provide/vod",
+        "detail": "https://www.ryzyw.com"
+      },
+      "www.haohuazy.com": {
+        "name": "🎬豪华资源",
+        "api": "https://hhzyapi.com/api.php/provide/vod",
+        "detail": "https://www.haohuazy.com"
+      },
+      "bdzy1.com": {
+        "name": "🎬百度云zy",
+        "api": "https://api.apibdzy.com/api.php/provide/vod",
+        "detail": "https://bdzy1.com"
+      },
+      "lovedan.net": {
+        "name": "🎬艾旦影视",
+        "api": "https://pz.v88.qzz.io/?url=https://lovedan.net/api.php/provide/vod",
+        "detail": "https://lovedan.net"
+      }
+    };
+    cfgFile.cache_time = 7200;
   }
   const adminConfig: AdminConfig = {
     ConfigFile: configFile,
@@ -206,7 +356,8 @@ async function getInitConfig(
       SearchDownstreamMaxPage:
         Number(process.env.NEXT_PUBLIC_SEARCH_MAX_PAGE) || 5,
       SiteInterfaceCacheTime: cfgFile.cache_time || 7200,
-      DoubanProxyType: process.env.NEXT_PUBLIC_DOUBAN_PROXY_TYPE || 'direct',
+      DoubanProxyType:
+        process.env.NEXT_PUBLIC_DOUBAN_PROXY_TYPE || 'direct',
       DoubanProxy: process.env.NEXT_PUBLIC_DOUBAN_PROXY || '',
       DoubanImageProxyType:
         process.env.NEXT_PUBLIC_DOUBAN_IMAGE_PROXY_TYPE || 'server',
@@ -214,7 +365,8 @@ async function getInitConfig(
       DisableYellowFilter:
         process.env.NEXT_PUBLIC_DISABLE_YELLOW_FILTER === 'true',
       ShowAdultContent: false, // 默认不显示成人内容，可在管理面板修改
-      FluidSearch: process.env.NEXT_PUBLIC_FLUID_SEARCH !== 'false',
+      FluidSearch:
+        process.env.NEXT_PUBLIC_FLUID_SEARCH !== 'false',
       // TMDB配置默认值
       TMDBApiKey: process.env.TMDB_API_KEY || '',
       TMDBLanguage: 'zh-CN',
@@ -236,13 +388,11 @@ async function getInitConfig(
   } catch (e) {
     console.error('获取用户列表失败:', e);
   }
-  const allUsers = userNames
-    .filter((u) => u !== process.env.USERNAME)
-    .map((u) => ({
-      username: u,
-      role: 'user',
-      banned: false,
-    }));
+  const allUsers = userNames.filter((u) => u !== process.env.USERNAME).map((u) => ({
+    username: u,
+    role: 'user',
+    banned: false,
+  }));
   allUsers.unshift({
     username: process.env.USERNAME!,
     role: 'owner',
@@ -257,256 +407,13 @@ async function getInitConfig(
       name: site.name,
       api: site.api,
       detail: site.detail,
-      from: 'config' as const,
+      from: 'config',
       disabled: false,
     });
+    
   });
 
-  // 硬编码默认视频源 - 用于腾讯EO等无KV存储环境
-  const defaultVideoSources = [
-    {
-      key: 'iqiyizyapi.com',
-      name: '🎬-爱奇艺-',
-      api: 'https://iqiyizyapi.com/api.php/provide/vod',
-      detail: 'https://iqiyizyapi.com',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: 'dbzy.tv',
-      name: '🎬豆瓣资源',
-      api: 'https://caiji.dbzy5.com/api.php/provide/vod',
-      detail: 'https://dbzy.tv',
-      from: 'config',
-      disabled: false,
-    },
-    {
-      key: 'tyyszy.com',
-      name: '🎬天涯影视',
-      api: 'https://tyyszy.com/api.php/provide/vod',
-      detail: 'https://tyyszy.com',
-      from: 'config',
-      disabled: false,
-    },
-    {
-      key: 'mtzy.me',
-      name: '🎬茅台资源',
-      api: 'https://caiji.maotaizy.cc/api.php/provide/vod',
-      detail: 'https://mtzy.me',
-      from: 'config',
-      disabled: false,
-    },
-    {
-      key: 'wolongzyw.com',
-      name: '🎬卧龙资源',
-      api: 'https://wolongzyw.com/api.php/provide/vod',
-      detail: 'https://wolongzyw.com',
-      from: 'config',
-      disabled: false,
-    },
-    {
-      key: 'ikunzy.com',
-      name: '🎬iKun资源',
-      api: 'https://ikunzyapi.com/api.php/provide/vod',
-      detail: 'https://ikunzy.com',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: 'dyttzyapi.com',
-      name: '🎬电影天堂',
-      api: 'http://caiji.dyttzyapi.com/api.php/provide/vod',
-      detail: 'http://caiji.dyttzyapi.com',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: 'www.maoyanzy.com',
-      name: '🎬猫眼资源',
-      api: 'https://api.maoyanapi.top/api.php/provide/vod',
-      detail: 'https://www.maoyanzy.com',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: 'cj.lzcaiji.com',
-      name: '🎬量子资源',
-      api: 'https://cj.lzcaiji.com/api.php/provide/vod',
-      detail: 'https://cj.lzcaiji.com',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: '360zy.com',
-      name: '🎬360 资源',
-      api: 'https://360zyzz.com/api.php/provide/vod',
-      detail: 'https://360zy.com',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: 'jszyapi.com',
-      name: '🎬极速资源',
-      api: 'https://jszyapi.com/api.php/provide/vod',
-      detail: 'https://jszyapi.com',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: 'www.moduzy.net',
-      name: '🎬魔都资源',
-      api: 'https://www.mdzyapi.com/api.php/provide/vod',
-      detail: 'https://www.moduzy.net',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: 'ffzyapi.com',
-      name: '🎬非凡资源',
-      api: 'https://api.ffzyapi.com/api.php/provide/vod',
-      detail: 'https://cj.ffzyapi.com',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: 'bfzy.tv',
-      name: '🎬暴风资源',
-      api: 'https://bfzyapi.com/api.php/provide/vod',
-      detail: 'https://bfzy.tv',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: 'zuida.xyz',
-      name: '🎬最大资源',
-      api: 'https://api.zuidapi.com/api.php/provide/vod',
-      detail: 'https://zuida.xyz',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: 'wujinzy.me',
-      name: '🎬无尽资源',
-      api: 'https://api.wujinapi.me/api.php/provide/vod',
-      detail: 'https://wujinzy.com',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: 'xinlangapi.com',
-      name: '🎬新浪资源',
-      api: 'https://api.xinlangapi.com/xinlangapi.php/provide/vod',
-      detail: 'https://xinlangapi.com',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: 'api.wwzy.tv',
-      name: '🎬旺旺资源',
-      api: 'https://api.wwzy.tv/api.php/provide/vod',
-      detail: 'https://api.wwzy.tv',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: 'www.subozy.com',
-      name: '🎬速播资源',
-      api: 'https://subocaiji.com/api.php/provide/vod',
-      detail: 'https://www.subozy.com',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: 'jinyingzy.com',
-      name: '🎬金鹰点播',
-      api: 'https://jinyingzy.com/api.php/provide/vod',
-      detail: 'https://jinyingzy.com',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: 'p2100.net',
-      name: '🎬飘零资源',
-      api: 'https://p2100.net/api.php/provide/vod',
-      detail: 'https://p2100.net',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: 'api.ukuapi88.com',
-      name: '🎬U酷影视',
-      api: 'https://api.ukuapi88.com/api.php/provide/vod',
-      detail: 'https://www.ukuzy.com',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: 'api.guangsuapi.com',
-      name: '🎬光速资源',
-      api: 'https://api.guangsuapi.com/api.php/provide/vod',
-      detail: 'https://api.guangsuapi.com',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: 'www.hongniuzy.com',
-      name: '🎬红牛资源',
-      api: 'https://www.hongniuzy2.com/api.php/provide/vod',
-      detail: 'https://www.hongniuzy.com',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: 'caiji.moduapi.cc',
-      name: '🎬魔都动漫',
-      api: 'https://caiji.moduapi.cc/api.php/provide/vod',
-      detail: 'https://caiji.moduapi.cc',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: 'www.ryzyw.com',
-      name: '🎬如意资源',
-      api: 'https://cj.rycjapi.com/api.php/provide/vod',
-      detail: 'https://www.ryzyw.com',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: 'www.haohuazy.com',
-      name: '🎬豪华资源',
-      api: 'https://hhzyapi.com/api.php/provide/vod',
-      detail: 'https://www.haohuazy.com',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: 'bdzy1.com',
-      name: '🎬百度云zy',
-      api: 'https://api.apibdzy.com/api.php/provide/vod',
-      detail: 'https://bdzy1.com',
-      from: 'config' as const,
-      disabled: false,
-    },
-    {
-      key: 'lovedan.net',
-      name: '🎬艾旦影视',
-      api: 'https://pz.v88.qzz.io/?url=https://lovedan.net/api.php/provide/vod',
-      detail: 'https://lovedan.net',
-      from: 'config' as const,
-      disabled: false,
-    },
-  ];
 
-  // 添加默认视频源到配置中（如果不存在）
-  defaultVideoSources.forEach((source) => {
-    const existingSource = adminConfig.SourceConfig.find(
-      (s) => s.key === source.key,
-    );
-    if (!existingSource) {
-      adminConfig.SourceConfig.push(source);
-    }
-  });
 
   // 从配置文件中补充自定义分类信息
   cfgFile.custom_category?.forEach((category) => {
@@ -517,6 +424,7 @@ async function getInitConfig(
       from: 'config',
       disabled: false,
     });
+    
   });
 
   // 从配置文件中补充直播源信息
@@ -557,8 +465,16 @@ export async function getConfig(): Promise<AdminConfig> {
 
   // db 中无配置，执行一次初始化
   if (!adminConfig) {
-    adminConfig = await getInitConfig('');
+    adminConfig = await getInitConfig("");
   }
+  
+  // 确保有默认视频源（用于不支持KV的环境）
+  if (!adminConfig.SourceConfig || adminConfig.SourceConfig.length === 0) {
+    const defaultConfig = await getInitConfig("");
+    adminConfig.SourceConfig = defaultConfig.SourceConfig;
+    adminConfig.SiteConfig.SiteInterfaceCacheTime = defaultConfig.SiteConfig.SiteInterfaceCacheTime;
+  }
+  
   adminConfig = await configSelfCheck(adminConfig);
 
   // 🔥 仍然更新 cachedConfig 以保持向后兼容，但不再依赖它
@@ -572,17 +488,12 @@ export function clearConfigCache(): void {
   cachedConfig = null as any;
 }
 
-export async function configSelfCheck(
-  adminConfig: AdminConfig,
-): Promise<AdminConfig> {
+export async function configSelfCheck(adminConfig: AdminConfig): Promise<AdminConfig> {
   // 确保必要的属性存在和初始化
   if (!adminConfig.UserConfig) {
     adminConfig.UserConfig = { AllowRegister: true, Users: [] };
   }
-  if (
-    !adminConfig.UserConfig.Users ||
-    !Array.isArray(adminConfig.UserConfig.Users)
-  ) {
+  if (!adminConfig.UserConfig.Users || !Array.isArray(adminConfig.UserConfig.Users)) {
     adminConfig.UserConfig.Users = [];
   }
 
@@ -592,78 +503,62 @@ export async function configSelfCheck(
     const ownerUser = process.env.USERNAME;
 
     // 创建用户列表：保留数据库中存在的用户的配置信息
-    const updatedUsers = await Promise.all(
-      dbUsers.map(async (username) => {
-        // 查找现有配置中是否有这个用户
-        const existingUserConfig = adminConfig.UserConfig.Users.find(
-          (u) => u.username === username,
-        );
+    const updatedUsers = await Promise.all(dbUsers.map(async username => {
+      // 查找现有配置中是否有这个用户
+      const existingUserConfig = adminConfig.UserConfig.Users.find(u => u.username === username);
 
-        if (existingUserConfig) {
-          // 保留现有配置
-          return existingUserConfig;
-        } else {
-          // 新用户，创建默认配置
-          let createdAt = Date.now();
-          let oidcSub: string | undefined;
-          let tags: string[] | undefined;
-          let role: 'owner' | 'admin' | 'user' =
-            username === ownerUser ? 'owner' : 'user';
-          let banned = false;
-          let enabledApis: string[] | undefined;
+      if (existingUserConfig) {
+        // 保留现有配置
+        return existingUserConfig;
+      } else {
+        // 新用户，创建默认配置
+        let createdAt = Date.now();
+        let oidcSub: string | undefined;
+        let tags: string[] | undefined;
+        let role: 'owner' | 'admin' | 'user' = username === ownerUser ? 'owner' : 'user';
+        let banned = false;
+        let enabledApis: string[] | undefined;
 
-          try {
-            // 从数据库V2获取用户信息（OIDC/新版用户）
-            const userInfoV2 = await db.getUserInfoV2(username);
-            console.log(
-              `=== configSelfCheck: 用户 ${username} 数据库信息 ===`,
-              userInfoV2,
-            );
-            if (userInfoV2) {
-              createdAt = userInfoV2.createdAt || Date.now();
-              oidcSub = userInfoV2.oidcSub;
-              tags = userInfoV2.tags;
-              role = userInfoV2.role || role;
-              banned = userInfoV2.banned || false;
-              enabledApis = userInfoV2.enabledApis;
-              console.log(
-                `=== configSelfCheck: 用户 ${username} tags ===`,
-                tags,
-              );
-            }
-          } catch (err) {
-            console.warn(`获取用户 ${username} 信息失败:`, err);
+        try {
+          // 从数据库V2获取用户信息（OIDC/新版用户）
+          const userInfoV2 = await db.getUserInfoV2(username);
+          console.log(`=== configSelfCheck: 用户 ${username} 数据库信息 ===`, userInfoV2);
+          if (userInfoV2) {
+            createdAt = userInfoV2.createdAt || Date.now();
+            oidcSub = userInfoV2.oidcSub;
+            tags = userInfoV2.tags;
+            role = userInfoV2.role || role;
+            banned = userInfoV2.banned || false;
+            enabledApis = userInfoV2.enabledApis;
+            console.log(`=== configSelfCheck: 用户 ${username} tags ===`, tags);
           }
-
-          const newUserConfig: any = {
-            username,
-            role,
-            banned,
-            createdAt,
-          };
-
-          if (oidcSub) {
-            newUserConfig.oidcSub = oidcSub;
-          }
-          if (tags && tags.length > 0) {
-            newUserConfig.tags = tags;
-            console.log(
-              `=== configSelfCheck: 用户 ${username} 最终配置包含tags ===`,
-              newUserConfig.tags,
-            );
-          } else {
-            console.log(
-              `=== configSelfCheck: 用户 ${username} 没有tags (tags=${tags}) ===`,
-            );
-          }
-          if (enabledApis && enabledApis.length > 0) {
-            newUserConfig.enabledApis = enabledApis;
-          }
-
-          return newUserConfig;
+        } catch (err) {
+          console.warn(`获取用户 ${username} 信息失败:`, err);
         }
-      }),
-    );
+
+        const newUserConfig: any = {
+          username,
+          role,
+          banned,
+          createdAt,
+        };
+
+        if (oidcSub) {
+          newUserConfig.oidcSub = oidcSub;
+        }
+        if (tags && tags.length > 0) {
+          newUserConfig.tags = tags;
+          console.log(`=== configSelfCheck: 用户 ${username} 最终配置包含tags ===`, newUserConfig.tags);
+        } else {
+          console.log(`=== configSelfCheck: 用户 ${username} 没有tags (tags=${tags}) ===`);
+        }
+        if (enabledApis && enabledApis.length > 0) {
+          newUserConfig.enabledApis = enabledApis;
+        }
+
+        return newUserConfig;
+      }
+    }));
 
     // 更新用户列表
     adminConfig.UserConfig.Users = updatedUsers;
@@ -678,69 +573,60 @@ export async function configSelfCheck(
   if (!adminConfig.SourceConfig || !Array.isArray(adminConfig.SourceConfig)) {
     adminConfig.SourceConfig = [];
   }
-  if (
-    !adminConfig.CustomCategories ||
-    !Array.isArray(adminConfig.CustomCategories)
-  ) {
+  if (!adminConfig.CustomCategories || !Array.isArray(adminConfig.CustomCategories)) {
     adminConfig.CustomCategories = [];
   }
   if (!adminConfig.LiveConfig || !Array.isArray(adminConfig.LiveConfig)) {
     adminConfig.LiveConfig = [];
   }
-
+  
   // 确保网盘搜索配置有默认值
   if (!adminConfig.NetDiskConfig) {
     adminConfig.NetDiskConfig = {
-      enabled: true, // 默认启用
-      pansouUrl: 'https://so.252035.xyz', // 默认公益服务
-      timeout: 30, // 默认30秒超时
-      enabledCloudTypes: ['baidu', 'aliyun', 'quark'], // 默认只启用百度、阿里、夸克三大主流网盘
+      enabled: true,                                    // 默认启用
+      pansouUrl: 'https://so.252035.xyz',               // 默认公益服务
+      timeout: 30,                                      // 默认30秒超时
+      enabledCloudTypes: ['baidu', 'aliyun', 'quark'] // 默认只启用百度、阿里、夸克三大主流网盘
     };
   }
 
   // 确保AI推荐配置有默认值
   if (!adminConfig.AIRecommendConfig) {
     adminConfig.AIRecommendConfig = {
-      enabled: false, // 默认关闭
-      apiUrl: 'https://api.openai.com/v1', // 默认OpenAI API
-      apiKey: '', // 默认为空，需要管理员配置
-      model: 'gpt-3.5-turbo', // 默认模型
-      temperature: 0.7, // 默认温度
-      maxTokens: 3000, // 默认最大token数
+      enabled: false,                                   // 默认关闭
+      apiUrl: 'https://api.openai.com/v1',             // 默认OpenAI API
+      apiKey: '',                                       // 默认为空，需要管理员配置
+      model: 'gpt-3.5-turbo',                          // 默认模型
+      temperature: 0.7,                                // 默认温度
+      maxTokens: 3000                                  // 默认最大token数
     };
   }
 
   // 确保YouTube配置有默认值
   if (!adminConfig.YouTubeConfig) {
     adminConfig.YouTubeConfig = {
-      enabled: false, // 默认关闭
-      apiKey: '', // 默认为空，需要管理员配置
-      enableDemo: true, // 默认启用演示模式
-      maxResults: 25, // 默认每页25个结果
+      enabled: false,                                   // 默认关闭
+      apiKey: '',                                       // 默认为空，需要管理员配置
+      enableDemo: true,                                 // 默认启用演示模式
+      maxResults: 25,                                   // 默认每页25个结果
       enabledRegions: ['US', 'CN', 'JP', 'KR', 'GB', 'DE', 'FR'], // 默认启用的地区
-      enabledCategories: [
-        'Film & Animation',
-        'Music',
-        'Gaming',
-        'News & Politics',
-        'Entertainment',
-      ], // 默认启用的分类
+      enabledCategories: ['Film & Animation', 'Music', 'Gaming', 'News & Politics', 'Entertainment'] // 默认启用的分类
     };
   }
 
   // 确保短剧配置有默认值
   if (!adminConfig.ShortDramaConfig) {
     adminConfig.ShortDramaConfig = {
-      primaryApiUrl: 'https://api.r2afosne.dpdns.org', // 默认主API
-      alternativeApiUrl: '', // 默认为空，需要管理员配置
-      enableAlternative: false, // 默认关闭备用API
+      primaryApiUrl: 'https://api.r2afosne.dpdns.org',  // 默认主API
+      alternativeApiUrl: '',                            // 默认为空，需要管理员配置
+      enableAlternative: false,                         // 默认关闭备用API
     };
   }
 
   // 确保下载配置有默认值
   if (!adminConfig.DownloadConfig) {
     adminConfig.DownloadConfig = {
-      enabled: true, // 默认启用下载功能
+      enabled: true,                                    // 默认启用下载功能
     };
   }
 
@@ -754,39 +640,29 @@ export async function configSelfCheck(
       providerId = 'google';
     } else if (issuer.includes('github')) {
       providerId = 'github';
-    } else if (
-      issuer.includes('microsoft') ||
-      issuer.includes('login.microsoftonline.com')
-    ) {
+    } else if (issuer.includes('microsoft') || issuer.includes('login.microsoftonline.com')) {
       providerId = 'microsoft';
-    } else if (
-      issuer.includes('linux.do') ||
-      issuer.includes('connect.linux.do')
-    ) {
+    } else if (issuer.includes('linux.do') || issuer.includes('connect.linux.do')) {
       providerId = 'linuxdo';
     }
 
     // 迁移到新格式
-    adminConfig.OIDCProviders = [
-      {
-        id: providerId,
-        name: adminConfig.OIDCAuthConfig.buttonText || providerId.toUpperCase(),
-        enabled: adminConfig.OIDCAuthConfig.enabled,
-        enableRegistration: adminConfig.OIDCAuthConfig.enableRegistration,
-        issuer: adminConfig.OIDCAuthConfig.issuer,
-        authorizationEndpoint: adminConfig.OIDCAuthConfig.authorizationEndpoint,
-        tokenEndpoint: adminConfig.OIDCAuthConfig.tokenEndpoint,
-        userInfoEndpoint: adminConfig.OIDCAuthConfig.userInfoEndpoint,
-        clientId: adminConfig.OIDCAuthConfig.clientId,
-        clientSecret: adminConfig.OIDCAuthConfig.clientSecret,
-        buttonText: adminConfig.OIDCAuthConfig.buttonText,
-        minTrustLevel: adminConfig.OIDCAuthConfig.minTrustLevel || 0,
-      },
-    ];
+    adminConfig.OIDCProviders = [{
+      id: providerId,
+      name: adminConfig.OIDCAuthConfig.buttonText || providerId.toUpperCase(),
+      enabled: adminConfig.OIDCAuthConfig.enabled,
+      enableRegistration: adminConfig.OIDCAuthConfig.enableRegistration,
+      issuer: adminConfig.OIDCAuthConfig.issuer,
+      authorizationEndpoint: adminConfig.OIDCAuthConfig.authorizationEndpoint,
+      tokenEndpoint: adminConfig.OIDCAuthConfig.tokenEndpoint,
+      userInfoEndpoint: adminConfig.OIDCAuthConfig.userInfoEndpoint,
+      clientId: adminConfig.OIDCAuthConfig.clientId,
+      clientSecret: adminConfig.OIDCAuthConfig.clientSecret,
+      buttonText: adminConfig.OIDCAuthConfig.buttonText,
+      minTrustLevel: adminConfig.OIDCAuthConfig.minTrustLevel || 0,
+    }];
 
-    console.log(
-      `[Config Migration] Migrated OIDCAuthConfig to OIDCProviders with provider: ${providerId}`,
-    );
+    console.log(`[Config Migration] Migrated OIDCAuthConfig to OIDCProviders with provider: ${providerId}`);
 
     // 保留旧配置一段时间以防回滚需要
     // delete adminConfig.OIDCAuthConfig;
@@ -805,12 +681,8 @@ export async function configSelfCheck(
     return true;
   });
   // 过滤站长
-  const originOwnerCfg = adminConfig.UserConfig.Users.find(
-    (u) => u.username === ownerUser,
-  );
-  adminConfig.UserConfig.Users = adminConfig.UserConfig.Users.filter(
-    (user) => user.username !== ownerUser,
-  );
+  const originOwnerCfg = adminConfig.UserConfig.Users.find((u) => u.username === ownerUser);
+  adminConfig.UserConfig.Users = adminConfig.UserConfig.Users.filter((user) => user.username !== ownerUser);
   // 其他用户不得拥有 owner 权限
   adminConfig.UserConfig.Users.forEach((user) => {
     if (user.role === 'owner') {
@@ -838,15 +710,13 @@ export async function configSelfCheck(
 
   // 自定义分类去重
   const seenCustomCategoryKeys = new Set<string>();
-  adminConfig.CustomCategories = adminConfig.CustomCategories.filter(
-    (category) => {
-      if (seenCustomCategoryKeys.has(category.query + category.type)) {
-        return false;
-      }
-      seenCustomCategoryKeys.add(category.query + category.type);
-      return true;
-    },
-  );
+  adminConfig.CustomCategories = adminConfig.CustomCategories.filter((category) => {
+    if (seenCustomCategoryKeys.has(category.query + category.type)) {
+      return false;
+    }
+    seenCustomCategoryKeys.add(category.query + category.type);
+    return true;
+  });
 
   // 直播源去重
   const seenLiveKeys = new Set<string>();
@@ -871,10 +741,7 @@ export async function resetConfig() {
   if (!originConfig) {
     originConfig = {} as AdminConfig;
   }
-  const adminConfig = await getInitConfig(
-    originConfig.ConfigFile,
-    originConfig.ConfigSubscribtion,
-  );
+  const adminConfig = await getInitConfig(originConfig.ConfigFile, originConfig.ConfigSubscribtion);
   cachedConfig = adminConfig;
   await db.saveAdminConfig(adminConfig);
 
@@ -897,15 +764,13 @@ function applyVideoProxy(sites: ApiSite[], config: AdminConfig): ApiSite[] {
 
   const proxyBaseUrl = proxyConfig.proxyUrl.replace(/\/$/, ''); // Remove trailing slash
 
-  return sites.map((source) => {
+  return sites.map(source => {
     // Extract real API URL (remove old proxy if exists)
     let realApiUrl = source.api;
     const urlMatch = source.api.match(/[?&]url=([^&]+)/);
     if (urlMatch) {
       realApiUrl = decodeURIComponent(urlMatch[1]);
-      console.log(
-        `[Video Proxy] ${source.name}: Detected old proxy, replacing with new proxy`,
-      );
+      console.log(`[Video Proxy] ${source.name}: Detected old proxy, replacing with new proxy`);
     }
 
     // Extract source ID from real API URL
@@ -916,24 +781,13 @@ function applyVideoProxy(sites: ApiSite[], config: AdminConfig): ApiSite[] {
         const parts = hostname.split('.');
 
         // For caiji.xxx.com or api.xxx.com format, take second-to-last part
-        if (
-          parts.length >= 3 &&
-          (parts[0] === 'caiji' ||
-            parts[0] === 'api' ||
-            parts[0] === 'cj' ||
-            parts[0] === 'www')
-        ) {
-          return parts[parts.length - 2]
-            .toLowerCase()
-            .replace(/[^a-z0-9]/g, '');
+        if (parts.length >= 3 && (parts[0] === 'caiji' || parts[0] === 'api' || parts[0] === 'cj' || parts[0] === 'www')) {
+          return parts[parts.length - 2].toLowerCase().replace(/[^a-z0-9]/g, '');
         }
 
         // Otherwise take first part (remove zyapi/zy suffix)
         let name = parts[0].toLowerCase();
-        name = name
-          .replace(/zyapi$/, '')
-          .replace(/zy$/, '')
-          .replace(/api$/, '');
+        name = name.replace(/zyapi$/, '').replace(/zy$/, '').replace(/api$/, '');
         return name.replace(/[^a-z0-9]/g, '') || 'source';
       } catch {
         return source.key || source.name.replace(/[^a-z0-9]/g, '');
@@ -967,26 +821,18 @@ export async function getAvailableApiSites(user?: string): Promise<ApiSite[]> {
         showAdultContent = userConfig.showAdultContent;
       }
       // 如果用户没有设置，检查用户组设置
-      else if (
-        userConfig.tags &&
-        userConfig.tags.length > 0 &&
-        config.UserConfig.Tags
-      ) {
+      else if (userConfig.tags && userConfig.tags.length > 0 && config.UserConfig.Tags) {
         // 如果用户有多个用户组，只要有一个用户组允许就允许（取并集）
-        const hasAnyTagAllowAdult = userConfig.tags.some((tagName) => {
-          const tagConfig = config.UserConfig.Tags?.find(
-            (t) => t.name === tagName,
-          );
+        const hasAnyTagAllowAdult = userConfig.tags.some(tagName => {
+          const tagConfig = config.UserConfig.Tags?.find(t => t.name === tagName);
           return tagConfig?.showAdultContent === true;
         });
         if (hasAnyTagAllowAdult) {
           showAdultContent = true;
         } else {
           // 检查是否有任何用户组明确禁止
-          const hasAnyTagDenyAdult = userConfig.tags.some((tagName) => {
-            const tagConfig = config.UserConfig.Tags?.find(
-              (t) => t.name === tagName,
-            );
+          const hasAnyTagDenyAdult = userConfig.tags.some(tagName => {
+            const tagConfig = config.UserConfig.Tags?.find(t => t.name === tagName);
             return tagConfig?.showAdultContent === false;
           });
           if (hasAnyTagDenyAdult) {
@@ -1016,14 +862,12 @@ export async function getAvailableApiSites(user?: string): Promise<ApiSite[]> {
   // 优先根据用户自己的 enabledApis 配置查找
   if (userConfig.enabledApis && userConfig.enabledApis.length > 0) {
     const userApiSitesSet = new Set(userConfig.enabledApis);
-    const userSites = allApiSites
-      .filter((s) => userApiSitesSet.has(s.key))
-      .map((s) => ({
-        key: s.key,
-        name: s.name,
-        api: s.api,
-        detail: s.detail,
-      }));
+    const userSites = allApiSites.filter((s) => userApiSitesSet.has(s.key)).map((s) => ({
+      key: s.key,
+      name: s.name,
+      api: s.api,
+      detail: s.detail,
+    }));
     return applyVideoProxy(userSites, config);
   }
 
@@ -1032,24 +876,20 @@ export async function getAvailableApiSites(user?: string): Promise<ApiSite[]> {
     const enabledApisFromTags = new Set<string>();
 
     // 遍历用户的所有 tags，收集对应的 enabledApis
-    userConfig.tags.forEach((tagName) => {
-      const tagConfig = config.UserConfig.Tags?.find((t) => t.name === tagName);
+    userConfig.tags.forEach(tagName => {
+      const tagConfig = config.UserConfig.Tags?.find(t => t.name === tagName);
       if (tagConfig && tagConfig.enabledApis) {
-        tagConfig.enabledApis.forEach((apiKey) =>
-          enabledApisFromTags.add(apiKey),
-        );
+        tagConfig.enabledApis.forEach(apiKey => enabledApisFromTags.add(apiKey));
       }
     });
 
     if (enabledApisFromTags.size > 0) {
-      const tagSites = allApiSites
-        .filter((s) => enabledApisFromTags.has(s.key))
-        .map((s) => ({
-          key: s.key,
-          name: s.name,
-          api: s.api,
-          detail: s.detail,
-        }));
+      const tagSites = allApiSites.filter((s) => enabledApisFromTags.has(s.key)).map((s) => ({
+        key: s.key,
+        name: s.name,
+        api: s.api,
+        detail: s.detail,
+      }));
       return applyVideoProxy(tagSites, config);
     }
   }
@@ -1066,7 +906,7 @@ export async function setCachedConfig(config: AdminConfig) {
 export async function hasSpecialFeaturePermission(
   username: string,
   feature: 'ai-recommend' | 'youtube-search',
-  providedConfig?: AdminConfig,
+  providedConfig?: AdminConfig
 ): Promise<boolean> {
   try {
     // 站长默认拥有所有权限
@@ -1075,10 +915,8 @@ export async function hasSpecialFeaturePermission(
     }
 
     // 使用提供的配置或获取新配置
-    const config = providedConfig || (await getConfig());
-    const userConfig = config.UserConfig.Users.find(
-      (u) => u.username === username,
-    );
+    const config = providedConfig || await getConfig();
+    const userConfig = config.UserConfig.Users.find((u) => u.username === username);
 
     // 如果用户不在配置中，检查是否是新注册用户
     if (!userConfig) {
@@ -1099,20 +937,10 @@ export async function hasSpecialFeaturePermission(
     }
 
     // 如果没有直接配置，检查用户组 tags 的权限
-    if (
-      userConfig.tags &&
-      userConfig.tags.length > 0 &&
-      config.UserConfig.Tags
-    ) {
+    if (userConfig.tags && userConfig.tags.length > 0 && config.UserConfig.Tags) {
       for (const tagName of userConfig.tags) {
-        const tagConfig = config.UserConfig.Tags.find(
-          (t) => t.name === tagName,
-        );
-        if (
-          tagConfig &&
-          tagConfig.enabledApis &&
-          tagConfig.enabledApis.includes(feature)
-        ) {
+        const tagConfig = config.UserConfig.Tags.find(t => t.name === tagName);
+        if (tagConfig && tagConfig.enabledApis && tagConfig.enabledApis.includes(feature)) {
           return true;
         }
       }
