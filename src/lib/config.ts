@@ -93,7 +93,7 @@ export function refineConfig(adminConfig: AdminConfig): AdminConfig {
         name: site.name,
         api: site.api,
         detail: site.detail,
-        from: 'config',
+        from: 'config' as const,
         disabled: false,
       });
     }
@@ -257,7 +257,7 @@ async function getInitConfig(
       name: site.name,
       api: site.api,
       detail: site.detail,
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     });
   });
@@ -269,7 +269,7 @@ async function getInitConfig(
       name: '🎬-爱奇艺-',
       api: 'https://iqiyizyapi.com/api.php/provide/vod',
       detail: 'https://iqiyizyapi.com',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -309,7 +309,7 @@ async function getInitConfig(
       name: '🎬iKun资源',
       api: 'https://ikunzyapi.com/api.php/provide/vod',
       detail: 'https://ikunzy.com',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -317,7 +317,7 @@ async function getInitConfig(
       name: '🎬电影天堂',
       api: 'http://caiji.dyttzyapi.com/api.php/provide/vod',
       detail: 'http://caiji.dyttzyapi.com',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -325,7 +325,7 @@ async function getInitConfig(
       name: '🎬猫眼资源',
       api: 'https://api.maoyanapi.top/api.php/provide/vod',
       detail: 'https://www.maoyanzy.com',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -333,7 +333,7 @@ async function getInitConfig(
       name: '🎬量子资源',
       api: 'https://cj.lzcaiji.com/api.php/provide/vod',
       detail: 'https://cj.lzcaiji.com',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -341,7 +341,7 @@ async function getInitConfig(
       name: '🎬360 资源',
       api: 'https://360zyzz.com/api.php/provide/vod',
       detail: 'https://360zy.com',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -349,7 +349,7 @@ async function getInitConfig(
       name: '🎬极速资源',
       api: 'https://jszyapi.com/api.php/provide/vod',
       detail: 'https://jszyapi.com',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -357,7 +357,7 @@ async function getInitConfig(
       name: '🎬魔都资源',
       api: 'https://www.mdzyapi.com/api.php/provide/vod',
       detail: 'https://www.moduzy.net',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -365,7 +365,7 @@ async function getInitConfig(
       name: '🎬非凡资源',
       api: 'https://api.ffzyapi.com/api.php/provide/vod',
       detail: 'https://cj.ffzyapi.com',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -373,7 +373,7 @@ async function getInitConfig(
       name: '🎬暴风资源',
       api: 'https://bfzyapi.com/api.php/provide/vod',
       detail: 'https://bfzy.tv',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -381,7 +381,7 @@ async function getInitConfig(
       name: '🎬最大资源',
       api: 'https://api.zuidapi.com/api.php/provide/vod',
       detail: 'https://zuida.xyz',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -389,7 +389,7 @@ async function getInitConfig(
       name: '🎬无尽资源',
       api: 'https://api.wujinapi.me/api.php/provide/vod',
       detail: 'https://wujinzy.com',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -397,7 +397,7 @@ async function getInitConfig(
       name: '🎬新浪资源',
       api: 'https://api.xinlangapi.com/xinlangapi.php/provide/vod',
       detail: 'https://xinlangapi.com',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -405,7 +405,7 @@ async function getInitConfig(
       name: '🎬旺旺资源',
       api: 'https://api.wwzy.tv/api.php/provide/vod',
       detail: 'https://api.wwzy.tv',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -413,7 +413,7 @@ async function getInitConfig(
       name: '🎬速播资源',
       api: 'https://subocaiji.com/api.php/provide/vod',
       detail: 'https://www.subozy.com',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -421,7 +421,7 @@ async function getInitConfig(
       name: '🎬金鹰点播',
       api: 'https://jinyingzy.com/api.php/provide/vod',
       detail: 'https://jinyingzy.com',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -429,7 +429,7 @@ async function getInitConfig(
       name: '🎬飘零资源',
       api: 'https://p2100.net/api.php/provide/vod',
       detail: 'https://p2100.net',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -437,7 +437,7 @@ async function getInitConfig(
       name: '🎬U酷影视',
       api: 'https://api.ukuapi88.com/api.php/provide/vod',
       detail: 'https://www.ukuzy.com',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -445,7 +445,7 @@ async function getInitConfig(
       name: '🎬光速资源',
       api: 'https://api.guangsuapi.com/api.php/provide/vod',
       detail: 'https://api.guangsuapi.com',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -453,7 +453,7 @@ async function getInitConfig(
       name: '🎬红牛资源',
       api: 'https://www.hongniuzy2.com/api.php/provide/vod',
       detail: 'https://www.hongniuzy.com',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -461,7 +461,7 @@ async function getInitConfig(
       name: '🎬魔都动漫',
       api: 'https://caiji.moduapi.cc/api.php/provide/vod',
       detail: 'https://caiji.moduapi.cc',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -469,7 +469,7 @@ async function getInitConfig(
       name: '🎬如意资源',
       api: 'https://cj.rycjapi.com/api.php/provide/vod',
       detail: 'https://www.ryzyw.com',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -477,7 +477,7 @@ async function getInitConfig(
       name: '🎬豪华资源',
       api: 'https://hhzyapi.com/api.php/provide/vod',
       detail: 'https://www.haohuazy.com',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -485,7 +485,7 @@ async function getInitConfig(
       name: '🎬百度云zy',
       api: 'https://api.apibdzy.com/api.php/provide/vod',
       detail: 'https://bdzy1.com',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
     {
@@ -493,7 +493,7 @@ async function getInitConfig(
       name: '🎬艾旦影视',
       api: 'https://pz.v88.qzz.io/?url=https://lovedan.net/api.php/provide/vod',
       detail: 'https://lovedan.net',
-      from: 'config',
+      from: 'config' as const,
       disabled: false,
     },
   ];
